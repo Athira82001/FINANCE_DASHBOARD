@@ -1,0 +1,61 @@
+//Insert/Add Records
+
+ axios({
+          method: 'post',
+          url:'http://192.168.29.35:2025/addDepartment',
+          data: {
+            depcode:formData.DeptCode,  
+            depname:formData.DeptName,     
+            depthod:formData.DeptHOD,     
+            active:formData.Active =='Yes' ? 'Y' : 'N',
+          }
+        }).then(response=>{if(response.status===200){
+           Alert.alert('Success', 'Saved successfully');
+        }else{
+           Alert.alert('Error', 'Save Failed');
+        }});
+
+
+
+//Modify/Update Records
+
+ axios({
+          method: 'post',
+          url:'http://192.168.29.35:2025/updateDepartment',
+          data: {
+            depcode:department.DeptCode,  
+            depname:department.DeptName,     
+            depthod:department.DeptHOD,     
+            active:department.Active =='Yes' ? 'Y' : 'N',
+          }
+        }).then(response=>{if(response.status===200){
+           Alert.alert('Success', 'Updated successfully');
+        }else{
+           Alert.alert('Error', 'Update Failed');
+        }});
+
+
+//Delete Records
+
+Alert.alert(
+      'Confirm Delete',
+      `Are you sure you want to delete ${item.DeptName}?`,
+      [
+        { text: 'Yes', onPress: () =>
+          axios({
+                      method: 'post',
+                      url:'http://192.168.29.35:2025/deleteDepartment',
+                      data: {
+                        depcode:item.DeptCode,              
+                      }
+                    }).then(response=>{if(response.status===200){
+                       Alert.alert('Success', 'Deleted successfully');
+                    }else{
+                       Alert.alert('Error', 'Delete Failed');
+                    }})},
+
+          //console.log('Delete', item) },
+        { text: 'No', style: 'cancel' },
+      ],
+      { cancelable: true }
+    );

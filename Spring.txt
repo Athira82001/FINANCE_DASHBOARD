@@ -1,0 +1,129 @@
+public static ArrayList<ModelMap> getDepartment() {
+    
+    String sql = "SELECT DeptCode,DeptName,DeptHOD,(SELECT COUNT(*) FROM EmployeeMaster WHERE Department = DeptCode),Active FROM Department";
+
+    PreparedStatement pStmt = null;
+    ResultSet rs = null;
+    ArrayList<ModelMap> model = new ArrayList<ModelMap>();
+
+    try {
+        conn = ConnectionManager.getConnection();
+        pStmt = conn.prepareStatement(sql);
+        rs = pStmt.executeQuery();
+
+        while (rs.next()) {
+        	ModelMap temp = new ModelMap();
+        	temp.put("DeptCode", rs.getString(1));
+        	temp.put("DeptName", rs.getString(2));
+        	temp.put("DeptHOD", rs.getString(3));
+        	temp.put("Empcmt", rs.getString(4));
+        	temp.put("Active", rs.getString(5));
+        	model.add(temp);
+        }
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    } 
+  
+    return model;
+}	
+
+public static void addDepartment(ModelMap details) throws Exception {		
+    PreparedStatement stmt0;
+    try {
+        String sql = "INSERT INTO Department (DeptCode,DeptName,DeptHOD,GroupHead,Active) VALUES ('" + details.get("depcode") + "', "
+        		+ " '" + details.get("depname") + "','" + details.get("depthod") + "','" + details.get("depthod") + "','" + details.get("active") + "')";
+        conn = ConnectionManager.getConnection();
+        stmt0 = conn.prepareStatement(sql);
+        stmt0.executeUpdate();
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } 	    
+}
+
+public static void deleteDepartment(ModelMap details) throws Exception {		
+    PreparedStatement stmt0;
+    try {
+        String sql = "DELETE FROM Department WHERE DeptCode =  '" + details.get("depcode") + "'";
+        conn = ConnectionManager.getConnection();
+        stmt0 = conn.prepareStatement(sql);
+        stmt0.executeUpdate();
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } 	    
+}
+
+public static void updateDepartment(ModelMap details) throws Exception {		
+    PreparedStatement stmt0;
+    try {
+        String sql = "UPDATE Department SET DeptName = '" + details.get("depname") + "',DeptHOD = '" + details.get("depthod") + "',"
+        		+ " Active = '" + details.get("active") + "'  WHERE DeptCode =  '" + details.get("depcode") + "'";
+        conn = ConnectionManager.getConnection();
+        stmt0 = conn.prepareStatement(sql);
+        stmt0.executeUpdate();
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } 	    
+}
+
+
+
+
+
+
+
+
+
+
+ @GetMapping("/getDepartment")
+	    @ResponseBody    
+	    public ArrayList<ModelMap> getDepartment() {
+		 	LOG.error("getDepartment");
+		 	ArrayList<ModelMap> model = DBERPToDo.getDepartment();
+	        return model;
+	    }	
+	 
+	 @PostMapping("/addDepartment")
+	    @ResponseBody    
+	    public void addDepartment(
+	    	@RequestBody ModelMap value) {
+		 	try {
+		 		DBERPToDo.addDepartment(value);		
+		 		LOG.info("addDepartment");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.toString());
+				e.printStackTrace();
+			}
+	    }
+	 
+	 @PostMapping("/deleteDepartment")
+	    @ResponseBody    
+	    public void deleteDepartment(
+	    	@RequestBody ModelMap value) {
+		 	try {
+		 		DBERPToDo.deleteDepartment(value);		
+		 		LOG.info("deleteDepartment");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.toString());
+				e.printStackTrace();
+			}
+	    }
+	 
+	 @PostMapping("/updateDepartment")
+	    @ResponseBody    
+	    public void updateDepartment(
+	    	@RequestBody ModelMap value) {
+		 	try {
+		 		DBERPToDo.updateDepartment(value);		
+		 		LOG.info("updateDepartment");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.toString());
+				e.printStackTrace();
+			}
+	    }
